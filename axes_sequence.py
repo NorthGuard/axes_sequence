@@ -9,8 +9,6 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.pyplot import Axes
 
 
-# TODO: The two grid-plots have the same title...
-
 class AxesGrid(Iterable):
     def __init__(self, fig, shape, initialize_grid, title=None, title_kwargs=None, gridspec_kwargs=None):
         # Settings
@@ -112,7 +110,7 @@ class AxesSequence(object):
         self._canvas = self._fig.canvas
         self._canvas.setFocusPolicy(QtCore.Qt.ClickFocus)
         self._canvas.setFocus()
-        self._canvas.mpl_connect('key_press_event', self.on_keypress)
+        self._canvas.mpl_connect('key_press_event', self._on_keypress)
 
         # List of axes, index and number of axes
         self._frames = []
@@ -128,12 +126,12 @@ class AxesSequence(object):
         :return:
         """
         while True:
-            yield self.new()
+            yield self._new()
 
     def __next__(self):
-        return self.new()
+        return self._new()
 
-    def new(self):
+    def _new(self):
         """
         Create new plot.
         :rtype: plt.Axes
@@ -144,6 +142,15 @@ class AxesSequence(object):
         return frame
 
     def new_axis_subplots(self, shape, title=None, title_kwargs=None, gridspec_kwargs=None):
+        """
+        Creates an object with multiple axes in it, arrange in a simple grid.
+        The returned object is an iterable where you can loop over the subplots.
+        :param tuple shape: A tuple with the number of rows (first value) and columns (second value) in the grid.
+        :param str title: Overall title above grid.
+        :param dict title_kwargs: Settings passed on to title (matplotlib-text object).
+        :param dict gridspec_kwargs: Settings passed on to GridSpec.
+        :return: AxesGrid
+        """
         frame = AxesGrid(self._fig, shape, initialize_grid=True, title=title,
                          title_kwargs=title_kwargs, gridspec_kwargs=gridspec_kwargs)
         self._n_plots += 1
@@ -151,13 +158,22 @@ class AxesSequence(object):
         return frame
 
     def new_axis_grid(self, shape, title=None, title_kwargs=None, gridspec_kwargs=None):
+        """
+        Creates an object with multiple axes in it, arrange in a gridspec.
+        This allows for creating advanced subplot-arrangements, such as one subplot taking up more than one grid-cell.
+        :param tuple shape: A tuple with the number of rows (first value) and columns (second value) in the grid.
+        :param str title: Overall title above grid.
+        :param dict title_kwargs: Settings passed on to title (matplotlib-text object).
+        :param dict gridspec_kwargs: Settings passed on to GridSpec.
+        :return: AxesGrid
+        """
         frame = AxesGrid(self._fig, shape, initialize_grid=False, title=title,
                          title_kwargs=title_kwargs, gridspec_kwargs=gridspec_kwargs)
         self._n_plots += 1
         self._frames.append(frame)
         return frame
 
-    def on_keypress(self, event):
+    def _on_keypress(self, event):
         key = event.key.lower()
 
         # Next plot
@@ -182,10 +198,10 @@ class AxesSequence(object):
         elif key == "delete":
             if self.include_frame_numbers:
                 self.include_frame_numbers = False
-                self.clear_addons()
+                self._clear_addons()
             else:
                 self.include_frame_numbers = True
-                self.make_addons()
+                self._make_addons()
 
         # Irrelevant key
         else:
@@ -194,7 +210,7 @@ class AxesSequence(object):
         # Draw canvas
         self._canvas.draw()
 
-    def make_addons(self):
+    def _make_addons(self):
         """
         Add additional information to plot, which can be removed afterwards (ex. plot number).
         """
@@ -214,7 +230,7 @@ class AxesSequence(object):
                                   ha="right", va="top", fontproperties=FontProperties(family='monospace'))
             self._addons.append(text)
 
-    def clear_addons(self):
+    def _clear_addons(self):
         """
         Remove add-ons from plot.
         """
@@ -222,11 +238,11 @@ class AxesSequence(object):
             addon = self._addons.pop()
             addon.remove()
 
-    def set_invisible(self):
+    def _set_invisible(self):
         """
         Make axis go away and clear all addons.
         """
-        self.clear_addons()
+        self._clear_addons()
 
         # Get frame and index
         idx = self._plot_idx
@@ -234,7 +250,7 @@ class AxesSequence(object):
 
         frame.set_visible(False)
 
-    def set_visible(self):
+    def _set_visible(self):
         """
         Make axis appear and create addons.
         """
@@ -246,7 +262,7 @@ class AxesSequence(object):
         frame.set_visible(True)
 
         # Add ons
-        self.make_addons()
+        self._make_addons()
 
     def switch_to_plot(self, idx):
         """
@@ -254,9 +270,9 @@ class AxesSequence(object):
         :param int idx:
         """
         if 0 <= idx < self._n_plots:
-            self.set_invisible()
+            self._set_invisible()
             self._plot_idx = idx
-            self.set_visible()
+            self._set_visible()
         else:
             raise IndexError(f"index for axis is incorrect: {idx} ({self._n_plots} axes available).")
 
@@ -265,20 +281,20 @@ class AxesSequence(object):
         Show yourself!
         """
         for frame_idx in range(self._n_plots):
-            self.set_invisible()
-        self.set_visible()
+            self._set_invisible()
+        self._set_visible()
         plt.show()
 
 
 if __name__ == "__main__":
+    plt.close("all")
 
     # Make axes-sequence
-    plt.close("all")
-    x = np.linspace(0, 10, 100)
     axes = AxesSequence()
 
     # Add a couple of plots
     for i, frame in zip(range(3), axes):
+        x = np.linspace(0, 10, 100)
         frame.plot(x, np.sin(i * x))
         frame.set_title('Line {}'.format(i + 1))
 
@@ -312,4 +328,3 @@ if __name__ == "__main__":
 
     # Show axes-sequence figure
     axes.show()
-
