@@ -1,10 +1,6 @@
 # axes_sequence
 Allows for making a single matplotlib-figure with multiple frames/axes in it. These axes can be navigated with keyboard-arrows. Made for Python (pyplot from matplotlib).
 
-![alt text][screen1]![alt text][screen2]  ![alt text][screen3]    
-
-Above shows three examples of a frame in an AxesSequence. The frame-numbering at the top-right corner can be toggled.
-
 ### Quick run
 
 The main-block at the bottom of the script will create an AxesSequence of eight frames for showing how 
@@ -40,3 +36,17 @@ frame respectively. `Delete` toggles the frame-numbering.
 [screen1]: https://github.com/North-Guard/axes_sequence/blob/master/screenshots/screen1.PNG "First frame."
 [screen2]: https://github.com/North-Guard/axes_sequence/blob/master/screenshots/screen2.PNG "Seventh frame."
 [screen3]: https://github.com/North-Guard/axes_sequence/blob/master/screenshots/screen3.PNG "Eighth frame."
+
+### Screen shots
+
+The below images show three examples of a frame in an AxesSequence. The frame-numbering at the top-right corner can be toggled.
+
+#### Frame 1
+![alt text][screen1]
+
+#### Frame 7
+![alt text][screen2]  
+
+#### Frame 8
+![alt text][screen3]    
+
