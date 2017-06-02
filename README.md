@@ -37,6 +37,6 @@ You can navigate through the frames with the keyboard arrow-keys. `Home`- and `E
 frame respectively. `Delete` toggles the frame-numbering.  
 
 
-[screen1]: https://github.com/North-Guard/axes_sequence/screenshots/screen1.PNG "First frame."
-[screen2]: https://github.com/North-Guard/axes_sequence/screenshots/screen2.PNG "Seventh frame."
-[screen3]: https://github.com/North-Guard/axes_sequence/screenshots/screen3.PNG "Eighth frame."
+[screen1]: https://github.com/North-Guard/axes_sequence/blob/master/screenshots/screen1.PNG "First frame."
+[screen2]: https://github.com/North-Guard/axes_sequence/blob/master/screenshots/screen2.PNG "Seventh frame."
+[screen3]: https://github.com/North-Guard/axes_sequence/blob/master/screenshots/screen3.PNG "Eighth frame."
