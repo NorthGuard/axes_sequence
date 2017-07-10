@@ -3,8 +3,7 @@ Allows for making a single matplotlib-figure with multiple frames/axes in it. Th
 
 ### Quick run
 
-The main-block at the bottom of the script will create an AxesSequence of eight frames for showing how 
-everything works.
+Run `python -m axes_sequence` to an AxesSequence with eight frames for showing how everything works.
 
 ### How to use it
 You create an axes-sequence and query it for new axes. The queries can be used either by iterating over the AxesSequence
